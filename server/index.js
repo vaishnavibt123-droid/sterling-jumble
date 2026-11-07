@@ -9,6 +9,7 @@ app.use(express.json());
 
 app.get("/api/health", (req, res) => res.json({ ok: true }));
 app.use("/api/products", require("./routes/products"));
+app.use("/api/auth", require("./routes/auth"));
 
 mongoose
   .connect(process.env.MONGO_URI)
