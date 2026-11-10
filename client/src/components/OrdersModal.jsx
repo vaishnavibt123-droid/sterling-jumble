@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-
-const API = "http://localhost:5000/api";
+const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 export default function OrdersModal({ onClose }) {
   const { token } = useAuth();
@@ -37,6 +36,7 @@ export default function OrdersModal({ onClose }) {
             ))}
             {o.discount > 0 && <div>Discount: −₹{o.discount}</div>}
             <div><strong>Total: ₹{o.total}</strong></div>
+            <div>Payment: {o.paymentStatus || "unpaid"}</div>
           </div>
         ))}
         <button className="link" onClick={onClose}>Close</button>

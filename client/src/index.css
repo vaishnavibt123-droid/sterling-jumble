@@ -111,3 +111,10 @@ header small { color: #7a5a5f; }
 }
 .grid .card h3 { min-height: 2.6em; margin: 8px 0 2px; }
 .grid .card button { margin-top: auto; }
+
+
+.pay-note { background: #fff4d6; border: 1px dashed #c98a00; padding: 8px; border-radius: 6px; font-size: .9rem; }
+.pay-actions { display: flex; gap: 8px; margin-top: 8px; }
+.pay-actions .checkout { flex: 1; opacity: 1; }
+.pay-fail { flex: 1; padding: 10px; border: 1px solid #b3261e; background: transparent; color: #b3261e; border-radius: 8px; }
+.msg-inline { margin: 8px 0 0; }

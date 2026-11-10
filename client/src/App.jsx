@@ -3,7 +3,7 @@ import Header from "./components/Header";
 import ProductCard from "./components/ProductCard";
 import BagPanel from "./components/BagPanel";
 
-const API = "http://localhost:5000/api";
+const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 const budgets = [
   { label: "All", max: null },
   { label: "Under ₹499", max: 499 },

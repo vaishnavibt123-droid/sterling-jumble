@@ -15,6 +15,11 @@ const orderSchema = new mongoose.Schema(
     discount: Number,
     total: Number,
     status: { type: String, default: "placed" },
+    paymentStatus: {
+  type: String,
+  enum: ["unpaid", "paid (demo)", "failed (demo)"],
+  default: "unpaid",
+},
   },
   { timestamps: true }
 );

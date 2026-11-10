@@ -56,5 +56,23 @@ router.get("/", auth, async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
+router.post("/:id/demo-pay", auth, async (req, res) => {
+  try {
+    const { outcome } = req.body;
+    if (!["success", "failure"].includes(outcome)) {
+      return res.status(400).json({ message: "Invalid outcome" });
+    }
+    const order = await Order.findOne({ _id: req.params.id, user: req.userId });
+    if (!order) return res.status(404).json({ message: "Order not found" });
+    if (order.paymentStatus === "paid (demo)") {
+      return res.status(400).json({ message: "Order is already paid" });
+    }
+    order.paymentStatus = outcome === "success" ? "paid (demo)" : "failed (demo)";
+    await order.save();
+    res.json(order);
+  } catch (err) {
+    const status = err.name === "CastError" ? 400 : 500;
+    res.status(status).json({ message: "Could not update payment" });
+  }
+});
 module.exports = router;
