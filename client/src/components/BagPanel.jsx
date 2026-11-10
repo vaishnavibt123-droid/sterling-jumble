@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useBag } from "../context/BagContext";
 import { useAuth } from "../context/AuthContext";
 
-const API = "http://localhost:5000/api";
+const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 export default function BagPanel() {
   const { bag, bagOpen, subtotal, discount, total, removeFromBag, clearBag } = useBag();

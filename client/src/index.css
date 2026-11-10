@@ -45,3 +45,69 @@ button { font-family: inherit; cursor: pointer; }
 .msg-inline { margin: 0 0 8px; font-weight: 600; }
 .modal.orders { max-height: 80vh; overflow-y: auto; }
 .order-row { border-top: 1px solid var(--silver); padding: 10px 0; font-size: .9rem; }
+
+
+/* ===== Maroon theme ===== */
+:root {
+  --bg: #FBF4F4;
+  --ink: #3A1218;
+  --silver: #E3CBCE;
+  --accent: #7A1F2B;
+  --maroon-dark: #5A1420;
+}
+body { background: var(--bg); color: var(--ink); }
+.demo-banner { background: var(--maroon-dark); color: #fff; }
+
+header { flex-wrap: wrap; justify-content: center; gap: 8px; background: #fff; border-bottom: 2px solid var(--accent); }
+header > div:first-child { flex: 1 1 100%; order: -1; text-align: center; }
+header h1 { font-size: 2.2rem; letter-spacing: .02em; color: var(--accent); }
+header small { color: #7a5a5f; }
+.hallmark { border-color: var(--accent); color: var(--accent); }
+.bag-btn { border-color: var(--accent); color: var(--accent); }
+.bag-btn:hover { background: var(--accent); color: #fff; }
+
+.hero { text-align: center; padding: 28px 16px 8px; }
+.hero h2 { font-family: "Cormorant Garamond", serif; font-size: clamp(1.6rem, 5vw, 2.6rem); margin: 0 0 6px; color: var(--accent); }
+.hero p { margin: 0; color: #7a5a5f; }
+
+.search { border-color: var(--silver); background: #fff; }
+.filters { justify-content: center; }
+.chip { background: #fff; border-color: var(--silver); color: var(--accent); }
+.chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.card { border-color: var(--silver); box-shadow: 0 2px 8px rgba(122, 31, 43, .06); }
+.card .photo { border-radius: 6px; background: linear-gradient(135deg, #f1dcdf, #d9aeb4); }
+.card .placeholder { display: grid; place-items: center; font: 600 2rem "Cormorant Garamond", serif; color: var(--accent); }
+.card button { border-color: var(--accent); color: var(--accent); }
+.card button:hover { background: var(--accent); color: #fff; }
+
+.checkout { background: var(--accent); color: #fff; }
+.checkout:not(:disabled) { opacity: 1; }
+
+/* ===== Equal-size cards ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 12px;
+  align-items: stretch;
+}
+@media (min-width: 700px) {
+  .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+.grid .card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+}
+.grid .card .photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.grid .card h3 { min-height: 2.6em; margin: 8px 0 2px; }
+.grid .card button { margin-top: auto; }

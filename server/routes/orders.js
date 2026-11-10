@@ -47,7 +47,10 @@ router.post("/", auth, async (req, res) => {
 
 router.get("/", auth, async (req, res) => {
   try {
-    const orders = await Order.find({ user: req.userId }).sort({ createdAt: -1 });
+    const orders = await Order.find({
+      user: req.userId,
+      status: { $ne: "pending" },
+    }).sort({ createdAt: -1 });
     res.json(orders);
   } catch (err) {
     res.status(500).json({ message: err.message });
