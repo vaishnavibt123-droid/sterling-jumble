@@ -4,6 +4,17 @@ import { useAuth } from "../context/AuthContext";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
+function loadRazorpay() {
+  return new Promise(resolve => {
+    if (window.Razorpay) return resolve(true);
+    const s = document.createElement("script");
+    s.src = "https://checkout.razorpay.com/v1/checkout.js";
+    s.onload = () => resolve(true);
+    s.onerror = () => resolve(false);
+    document.body.appendChild(s);
+  });
+}
+
 export default function BagPanel() {
   const { bag, bagOpen, subtotal, discount, total, removeFromBag, clearBag } = useBag();
   const { user, token } = useAuth();
@@ -42,49 +53,77 @@ export default function BagPanel() {
     }
   };
 
-  const payDemo = async outcome => {
+  const pay = async () => {
     setMessage("");
     setBusy(true);
     try {
-      const res = await fetch(`${API}/orders/${order._id}/demo-pay`, {
+      const loaded = await loadRazorpay();
+      if (!loaded) throw new Error("Could not load the payment window");
+      const res = await fetch(`${API}/payments/create`, {
         method: "POST",
         headers,
-        body: JSON.stringify({ outcome }),
+        body: JSON.stringify({ orderId: order._id }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Payment update failed");
-      setOrder(data);
-      setMessage(
-        data.paymentStatus === "paid (demo)"
-          ? "Demo payment successful. Thank you!"
-          : "Demo payment failed. You can try again."
-      );
+      if (!res.ok) throw new Error(data.message || "Could not start payment");
+
+      const rzp = new window.Razorpay({
+        key: data.keyId,
+        amount: data.amount,
+        currency: data.currency,
+        name: "Sterling Jumble (TEST MODE)",
+        description: "Demo order",
+        order_id: data.razorpayOrderId,
+        theme: { color: "#7A1F2B" },
+        prefill: {
+  name: "Demo User",
+  email: "demo@example.com",
+  contact: "9000090000",
+},
+        modal: { ondismiss: () => setBusy(false) },
+        handler: async response => {
+          try {
+            const v = await fetch(`${API}/payments/verify`, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({ orderId: order._id, ...response }),
+            });
+            const updated = await v.json();
+            if (!v.ok) throw new Error(updated.message || "Verification failed");
+            setOrder(updated);
+            setMessage("Payment successful (test mode). Thank you!");
+          } catch (err) {
+            setMessage(err.message);
+          } finally {
+            setBusy(false);
+          }
+        },
+      });
+      rzp.on("payment.failed", () => {
+        setMessage("Payment failed. You can try again.");
+        setBusy(false);
+      });
+      rzp.open();
     } catch (err) {
       setMessage(err.message);
-    } finally {
       setBusy(false);
     }
   };
 
   if (order) {
-    const paid = order.paymentStatus === "paid (demo)";
+    const paid = order.paymentStatus === "paid";
     return (
       <section className="bag">
-        <h3>Demo payment</h3>
+        <h3>Payment</h3>
         <p className="pay-note">
-          DEMO ONLY: no real payment is taken and no card details are collected.
+          TEST MODE: use only Razorpay's documented test details. Never enter a real card or UPI ID.
         </p>
         <p>Order total: ₹{order.total}</p>
         <p>Status: {order.paymentStatus}</p>
         {!paid && (
-          <div className="pay-actions">
-            <button className="checkout" disabled={busy} onClick={() => payDemo("success")}>
-              Simulate success
-            </button>
-            <button className="pay-fail" disabled={busy} onClick={() => payDemo("failure")}>
-              Simulate failure
-            </button>
-          </div>
+          <button className="checkout" disabled={busy} onClick={pay}>
+            {busy ? "Processing..." : "Pay now (test mode)"}
+          </button>
         )}
         {paid && (
           <button className="checkout" onClick={() => { setOrder(null); setMessage(""); }}>

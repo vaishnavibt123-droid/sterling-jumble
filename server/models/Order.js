@@ -17,9 +17,11 @@ const orderSchema = new mongoose.Schema(
     status: { type: String, default: "placed" },
     paymentStatus: {
   type: String,
-  enum: ["unpaid", "paid (demo)", "failed (demo)"],
+  enum: ["unpaid", "paid", "failed"],
   default: "unpaid",
 },
+razorpayOrderId: String,
+razorpayPaymentId: String,
   },
   { timestamps: true }
 );
