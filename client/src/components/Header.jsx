@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import AuthModal from "./AuthModal";
 import OrdersModal from "./OrdersModal";
 
-export default function Header() {
+export default function Header({ onForgot }) {
   const { bag, bagOpen, setBagOpen } = useBag();
   const { user, logout } = useAuth();
   const [showAuth, setShowAuth] = useState(false);
@@ -30,8 +30,16 @@ export default function Header() {
           Bag ({bag.length})
         </button>
       </div>
-      {showAuth && <AuthModal onClose={() => setShowAuth(false)} />}
-        {showOrders && <OrdersModal onClose={() => setShowOrders(false)} />}
+      {showAuth && (
+        <AuthModal
+          onClose={() => setShowAuth(false)}
+          onForgot={() => {
+            setShowAuth(false);
+            onForgot();
+          }}
+        />
+      )}
+      {showOrders && <OrdersModal onClose={() => setShowOrders(false)} />}
     </header>
   );
 }

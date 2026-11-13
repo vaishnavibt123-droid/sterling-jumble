@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import ProductCard from "./components/ProductCard";
 import BagPanel from "./components/BagPanel";
+import ResetPassword from "./components/ResetPassword";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 const budgets = [
@@ -16,6 +17,7 @@ export default function App() {
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [budget, setBudget] = useState(0);
+  const [showReset, setShowReset] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -38,7 +40,7 @@ export default function App() {
   return (
     <>
       <div className="demo-banner">Demo project for portfolio. No real products or payments.</div>
-      <Header />
+      <Header onForgot={() => setShowReset(true)} />
       <input
         className="search"
         placeholder="Search silver pieces"
@@ -70,6 +72,7 @@ export default function App() {
       </main>
 
       <BagPanel />
+      {showReset && <ResetPassword onClose={() => setShowReset(false)} />}
     </>
   );
 }

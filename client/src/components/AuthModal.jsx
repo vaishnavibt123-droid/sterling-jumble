@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
-export default function AuthModal({ onClose }) {
+export default function AuthModal({ onClose, onForgot }) {
   const { login, signup } = useAuth();
   const [mode, setMode] = useState("login");
   const [name, setName] = useState("");
@@ -50,6 +50,11 @@ export default function AuthModal({ onClose }) {
             {busy ? "Please wait..." : mode === "login" ? "Log in" : "Sign up"}
           </button>
         </form>
+        {mode === "login" && onForgot && (
+          <button type="button" className="link" onClick={onForgot}>
+            Forgot password?
+          </button>
+        )}
         <button
           className="link"
           onClick={() => {
