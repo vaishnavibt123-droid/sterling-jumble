@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import Header from "./components/Header";
 import ProductCard from "./components/ProductCard";
+import ProductModal from "./components/ProductModal";
 import BagPanel from "./components/BagPanel";
 import ResetPassword from "./components/ResetPassword";
+import { useBag } from "./context/BagContext";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 const budgets = [
@@ -12,12 +14,14 @@ const budgets = [
 ];
 
 export default function App() {
+  const { addToBag, setBagOpen } = useBag();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [budget, setBudget] = useState(0);
   const [showReset, setShowReset] = useState(false);
+  const [selected, setSelected] = useState(null);
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -36,6 +40,11 @@ export default function App() {
       .catch(() => setError("Could not load products. Is the server running?"))
       .finally(() => setLoading(false));
   }, [query, budget]);
+
+  const buyNow = product => {
+    addToBag(product);
+    setBagOpen(true);
+  };
 
   return (
     <>
@@ -67,11 +76,17 @@ export default function App() {
 
       <main className="grid">
         {products.map(p => (
-          <ProductCard key={p._id} product={p} />
+          <ProductCard key={p._id} product={p} onOpen={setSelected} />
         ))}
       </main>
 
       <BagPanel />
+      <ProductModal
+        product={selected}
+        onClose={() => setSelected(null)}
+        onAdd={addToBag}
+        onBuy={buyNow}
+      />
       {showReset && <ResetPassword onClose={() => setShowReset(false)} />}
     </>
   );

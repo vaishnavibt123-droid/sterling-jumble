@@ -119,3 +119,15 @@ header small { color: #7a5a5f; }
 
 .pay-note { background: #fff4d6; border: 1px dashed #c98a00; padding: 8px; border-radius: 6px; font-size: .9rem; }
 .msg-inline { margin: 8px 0 0; }
+
+.product-modal { max-width: 420px; }
+.product-modal-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+.product-modal-price { font-weight: 700; font-size: 1.2rem; margin: 4px 0 10px; }
+.product-modal-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.product-card-clickable { cursor: pointer; }
