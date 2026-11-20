@@ -3,6 +3,7 @@
 A full-stack e-commerce web app for a demo 925 sterling silver jewellery store. Built with the MERN stack as a portfolio project.
 
 **Live demo:** https://sterling-jumble.vercel.app/
+
 **API:** https://sterling-jumble.onrender.com/api/products
 
 > **Demo project.** No real products are sold and no real payments are taken. Payments run in Razorpay **test mode** only. Product images are for demonstration purposes only.
